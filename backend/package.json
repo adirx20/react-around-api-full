@@ -1,0 +1,39 @@
+{
+  "name": "around-express",
+  "version": "1.0.0",
+  "description": "around-express project",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adirx20/around-express.git"
+  },
+  "author": "Adir Sason",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adirx20/around-express/issues"
+  },
+  "homepage": "https://github.com/adirx20/around-express#readme",
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "express-winston": "^4.2.0",
+    "helmet": "^5.1.0",
+    "mongoose": "^6.3.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0",
+    "validator": "^13.7.0",
+    "winston": "^3.8.1"
+  }
+}
