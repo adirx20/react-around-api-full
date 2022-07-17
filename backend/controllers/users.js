@@ -1,4 +1,5 @@
 const e = require('express');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const getUsers = async (req, res) => {
@@ -29,20 +30,62 @@ const getUserById = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
-  const { name, about, avatar } = req.body;
+// const createUser = (req, res) => {
+//   const { email, password, name, about, avatar } = req.body;
 
-  try {
-    const newUser = await User.create({ name, about, avatar });
-    res.status(201).send(newUser);
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      res.status(400).send({ message: 'Invalid input' });
-    } else {
-      res.status(500).send({ message: 'Something is not working...' });
-    }
-  }
+//   bcrypt.hash(password, 10)
+//   .then((hash) => {
+//     User.create({
+//       email: email,
+//       password: hash,
+//     })
+//   })
+//   .then((user) => {
+//     res.send(user);
+//   })
+//   .catch((err) => {
+//     res.status(400).send(err);
+//   });
+// };
+
+// NEW CREATE USER FUNCTION
+const createUser = (req, res, next) => {
+  const { name, about, avatar, email, password } = req.body;
+
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      })
+    })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
+
+// ORIGINAL CREATE USER FUNCTION
+
+// const createUser = async (req, res) => {
+//   const { email, password, name, about, avatar } = req.body;
+
+//   try {
+//     const newUser = await User.create({ name, about, avatar });
+//     res.status(201).send(newUser);
+//   } catch (error) {
+//     if (error.name === 'ValidationError') {
+//       res.status(400).send({ message: 'Invalid input' });
+//     } else {
+//       res.status(500).send({ message: 'Something is not working...' });
+//     }
+//   }
+// };
 
 const updateProfile = async (req, res) => {
   const { name, about } = req.body;
