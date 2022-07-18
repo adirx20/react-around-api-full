@@ -125,10 +125,37 @@ const updateProfileAvatar = async (req, res) => {
   }
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('login error')) // need to edit the message
+      } else {
+        return bcrypt.compare(password, user.password)
+          .then((matched) => {
+            if (!matched) {
+              return Promise.reject(new Error('password error')) // need to edit the message
+            } else {
+              res.status(200).send({ message: 'successful' }); // need to edit the message
+            }
+          })
+          .catch((err) => {
+            res.status(401).send({ message: err.message });
+          });
+      }
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateProfile,
   updateProfileAvatar,
+  login,
 };
