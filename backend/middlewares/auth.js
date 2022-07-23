@@ -1,3 +1,6 @@
+const jwt = require('jsonwebtoken');
+
+// =====>
 const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
@@ -10,7 +13,7 @@ const auth = (req, res, next) => {
     let payload;
 
     try {
-      payload = jwt.verift(token, 'not-very-secret-key');
+      payload = jwt.verify(token, 'not-very-secret-key');
     } catch (err) {
       return res
         .status(401)

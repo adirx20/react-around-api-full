@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -36,8 +37,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
+    minlength: 6,
+    select: false,
   },
 });
 
@@ -45,7 +46,7 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
-  return this.findOne({ email })
+  return this.findOne({ email }).select('+password')
   .then((user) => {
     if (!user) {
       return Promise.reject(new Error('bad credentials')); // need to edit message
