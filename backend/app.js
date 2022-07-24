@@ -20,13 +20,13 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62a7b01ae992a78170f661ac',
-  };
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '62a7b01ae992a78170f661ac',
+//   };
 
-  next();
-});
+//   next();
+// });
 
 app.post('/signin', login);
 app.post('/signup', createUser);
