@@ -40,6 +40,10 @@ app.use('/', (req, res) => {
   res.status(404).send({ message: 'Requested resource not found' });
 });
 
+app.use((err, req, res, next) => {
+  res.status(500).send({ message: 'Something is not working...' });
+});
+
 app.listen(PORT, () => {
   console.log(`App listening at port ${PORT}`);
 });
