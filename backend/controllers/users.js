@@ -2,32 +2,36 @@ const e = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { AppError } = require('../errors/AppError');
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
-
     res.send(users);
+
   } catch (error) {
-    res.status(500).send({ message: 'Something is not working...' });
+    next(error);
+    // res.status(500).send({ message: 'Something is not working...' });
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.params.user_id });
 
     if (!user) {
-      res.status(404).send({ message: 'User ID not found' });
+      throw new AppError(404, 'User ID not found');
+      // res.status(404).send({ message: 'User ID not found' });
     } else {
       res.send(user);
     }
   } catch (error) {
-    if (error.name === 'CastError') {
-      res.status(400).send({ message: 'Invalid input' });
-    } else {
-      res.status(500).send({ message: 'Something is not working...' });
-    }
+    next(error);
+    // if (error.name === 'CastError') {
+    //   res.status(400).send({ message: 'Invalid input' });
+    // } else {
+    //   res.status(500).send({ message: 'Something is not working...' });
+    // }
   }
 };
 
@@ -66,13 +70,13 @@ const createUser = (req, res, next) => {
     .then((user) => {
       res.status(201).send(user);
     })
-    .catch((err) => {
-      res.status(401).send({ message: 'Something is not working...' })
-      next(err);
-    });
+    .catch(next);
 };
+// catch previous handler ^
+// res.status(401).send({ message: 'Something is not working...' })
+// next(err);
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
@@ -85,13 +89,14 @@ const login = (req, res) => {
       res.send({ token });
       res.status(200).send(user, { message: 'successful' }); // need to edit the message
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 };
+// catch previous handler ^
+// res.status(401).send({ message: err.message });
+
+
 
 // ORIGINAL CREATE USER FUNCTION
-
 // const createUser = async (req, res) => {
 //   const { email, password, name, about, avatar } = req.body;
 
@@ -107,7 +112,7 @@ const login = (req, res) => {
 //   }
 // };
 
-const updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
   const { name, about } = req.body;
 
   try {
@@ -116,17 +121,23 @@ const updateProfile = async (req, res) => {
       { name, about },
       { new: true, runValidators: true },
     );
-    res.status(200).send(user);
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      res.status(400).send({ message: 'Invalid input' });
+
+    if (!user) {
+      throw new AppError(404, 'User ID not found');
     } else {
-      res.status(500).send({ message: 'Something is not working...' });
+      res.status(200).send(user);
     }
+  } catch (error) {
+    next(error);
+    // if (error.name === 'ValidationError') {
+    //   res.status(400).send({ message: 'Invalid input' });
+    // } else {
+    //   res.status(500).send({ message: 'Something is not working...' });
+    // }
   }
 };
 
-const updateProfileAvatar = async (req, res) => {
+const updateProfileAvatar = async (req, res, next) => {
   const { avatar } = req.body;
 
   try {
@@ -135,13 +146,19 @@ const updateProfileAvatar = async (req, res) => {
       { avatar },
       { new: true, runValidators: true },
     );
-    res.status(200).send(user);
-  } catch (error) {
-    if (error.name === 'ValidationError') {
-      res.status(400).send({ message: 'Invalid input' });
+
+    if (!user) {
+      throw new AppError(404, 'User ID not found');
     } else {
-      res.status(500).send({ message: 'Something is not working...' });
+      res.status(200).send(user);
     }
+  } catch (error) {
+    next(error);
+    // if (error.name === 'ValidationError') {
+    //   res.status(400).send({ message: 'Invalid input' });
+    // } else {
+    //   res.status(500).send({ message: 'Something is not working...' });
+    // }
   }
 };
 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
+const { centralErrorHandler } = require('./middlewares/centralErrorHandler');
 
 const { PORT = 3000 } = process.env;
 
@@ -20,14 +21,6 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '62a7b01ae992a78170f661ac',
-//   };
-
-//   next();
-// });
-
 app.post('/signin', login);
 app.post('/signup', createUser);
 
@@ -41,7 +34,7 @@ app.use('/', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).send({ message: 'Something is not working...' });
+  centralErrorHandler(err, res);
 });
 
 app.listen(PORT, () => {
