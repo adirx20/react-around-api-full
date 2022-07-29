@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const helmet = require('helmet');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
@@ -16,6 +17,9 @@ const cardsRouter = require('./routes/cards');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 mongoose.connect('mongodb://localhost:27017/aroundb');
+
+app.use(cors());
+app.options('*', cors());
 
 app.use(helmet());
 app.use(bodyParser.json());
