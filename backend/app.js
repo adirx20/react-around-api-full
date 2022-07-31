@@ -7,7 +7,7 @@ const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { centralErrorHandler } = require('./middlewares/centralErrorHandler');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 const app = express();
 
@@ -25,10 +25,10 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+// app.post('/signin', login);
+// app.post('/signup', createUser);
 
-app.use(auth);
+// app.use(auth);
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);

@@ -70,7 +70,7 @@ const createUser = (req, res, next) => {
     .then((user) => {
       res.status(201).send(user);
     })
-    .catch(next);
+    .catch((err) => next(err));
 };
 // catch previous handler ^
 // res.status(401).send({ message: 'Something is not working...' })
@@ -78,6 +78,7 @@ const createUser = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
+  console.log('something');
 
   User.findUserByCredentials(email, password)
     .then((user) => {
@@ -86,10 +87,11 @@ const login = (req, res, next) => {
         'not-so-secret-string'
       );
 
+      console.log('Im alive');
       res.send({ token });
       res.status(200).send(user, { message: 'successful' }); // need to edit the message
     })
-    .catch(next);
+    .catch((err) => {console.log(err); next(err);});
 };
 // catch previous handler ^
 // res.status(401).send({ message: err.message });
