@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { AppError } = require('../errors/AppError');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const getUsers = async (req, res, next) => {
     try {
         const users = await User.find({});
@@ -106,7 +108,7 @@ const login = (req, res, next) => {
             res.status(200).send({ user, token, message: 'successful' }); // need to edit the message
         })
         .catch((err) => {
-            console.log(err);
+            console.log('login error: ', err);
             next(err);
         });
 };

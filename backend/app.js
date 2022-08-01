@@ -6,7 +6,6 @@ const helmet = require('helmet');
 // const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const { centralErrorHandler } = require('./middlewares/centralErrorHandler');
-const keys = require('./keys');
 const { PORT = 3002 } = process.env;
 
 const app = express();
@@ -16,7 +15,7 @@ const cardsRouter = require('./routes/cards');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-mongoose.connect(keys.mongoURI);
+mongoose.connect('mongodb://localhost:27017/aroundb');
 
 app.use(cors());
 app.options('*', cors());

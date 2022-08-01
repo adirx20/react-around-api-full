@@ -20,7 +20,6 @@ router.post('/signup', createUser);
 router.get('/', getUsers);
 router.post('/', createUser);
 router.get('/me', auth, getCurrentUser);
-
 router.patch('/me', auth, updateProfile);
 router.patch('/me/avatar', auth, updateProfileAvatar);
 router.get('/:user_id', getUserById);
