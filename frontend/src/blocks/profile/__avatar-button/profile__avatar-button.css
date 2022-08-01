@@ -1,0 +1,15 @@
+.profile__avatar-button {
+    min-width: 120px;
+    width: 120px;
+    height: 120px;
+    margin: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, .8);
+    background: url('../../../images/edit-avatar-button.svg') center no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    transition: visibility .5s linear;
+}

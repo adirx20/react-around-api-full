@@ -1,0 +1,12 @@
+.profile__avatar {
+    min-width: 120px;
+    width: 120px;
+    height: 120px;
+    margin: 0;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 1);
+    background: round;
+    position: absolute;
+    top: 0;
+    left: 0;
+}

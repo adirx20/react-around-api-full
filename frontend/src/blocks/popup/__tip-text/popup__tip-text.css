@@ -1,0 +1,8 @@
+.popup__tip-text {
+    max-width: 358px;
+    margin: 0;
+    line-height: 29px;
+    font-size: 24px;
+    font-weight: 900;
+    text-align: center;
+}

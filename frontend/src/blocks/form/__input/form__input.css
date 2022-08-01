@@ -1,0 +1,24 @@
+.form__input {
+    max-width: 358px;
+    width: 100%;
+    margin: 0 0 30px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    outline: none;
+}
+
+.form__input:nth-child(2n + 2) {
+    margin: 0 0 48px;
+}
+
+@media screen and (max-width: 650px) {
+    .form__input:nth-child(2n + 2) {
+        margin-bottom: 46px;
+        height: 26px;
+    }
+}
+
+.form__input:focus {
+    max-height: 26px;
+    box-shadow: 0 0 2px 2px rgba(47, 139, 237, 1);
+}

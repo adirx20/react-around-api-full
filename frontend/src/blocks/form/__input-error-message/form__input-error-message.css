@@ -1,0 +1,9 @@
+.form__input-error-message {
+    max-width: 164px;
+    margin: 5px 0 13px;
+    line-height: 1;
+    font-size: 12px;
+    font-style: normal;
+    display: inline-block;
+    color: rgba(255, 0, 0, 1);
+}
