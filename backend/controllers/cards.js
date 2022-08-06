@@ -1,16 +1,18 @@
 const Card = require('../models/card');
+const { AppError } = require('../errors/AppError');
 
-const getCards = async (req, res) => {
+const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
 
     res.status(200).send(cards);
   } catch (error) {
-    res.status(500).send({ message: 'Requested resource not found' });
+    next(error);
+    // res.status(500).send({ message: 'Requested resource not found' });
   }
 };
 
-const createCard = async (req, res) => {
+const createCard = async (req, res, next) => {
   const { name, link } = req.body;
 
   try {
@@ -22,19 +24,21 @@ const createCard = async (req, res) => {
     if (error.name === 'ValidationError') {
       res.status(400).send({ message: 'Invalid input' });
     } else {
-      res.status(500).send({ message: 'Something is not working...' });
+      next(error);
+      // res.status(500).send({ message: 'Something is not working...' });
     }
   }
 };
 
-const deleteCard = async (req, res) => {
+const deleteCard = async (req, res, next) => {
   const cardId = req.params.card_id;
 
   try {
     const card = await Card.findOneAndRemove({ _id: cardId });
 
     if (!card) {
-      res.status(404).send({ message: 'Card not found' });
+      throw new AppError(404, 'Card ID not found');
+      // res.status(404).send({ message: 'Card not found' });
     } else {
       res.status(200).send({ message: `${cardId} - This card has been deleted successfully` });
     }
@@ -42,12 +46,13 @@ const deleteCard = async (req, res) => {
     if (error.name === 'CastError') {
       res.status(400).send({ message: 'Invalid input' });
     } else {
-      res.status(500).send({ message: 'Something is not working...' });
+      next(error);
+      // res.status(500).send({ message: 'Something is not working...' });
     }
   }
 };
 
-const likeCard = async (req, res) => {
+const likeCard = async (req, res, next) => {
   const cardId = req.params.card_id;
 
   try {
@@ -58,7 +63,8 @@ const likeCard = async (req, res) => {
     );
 
     if (card === null) {
-      res.status(404).send({ message: 'Card ID not found' });
+      throw new AppError(404, 'Card ID not found');
+      // res.status(404).send({ message: 'Card ID not found' });
     } else {
       res.status(200).send({ message: 'Card is liked' });
     }
@@ -66,12 +72,13 @@ const likeCard = async (req, res) => {
     if (error.name === 'CastError') {
       res.status(400).send({ message: 'Invalid input' });
     } else {
-      res.status(500).send({ message: 'Something is not working...' });
+      next(error);
+      // res.status(500).send({ message: 'Something is not working...' });
     }
   }
 };
 
-const dislikeCard = async (req, res) => {
+const dislikeCard = async (req, res, next) => {
   const cardId = req.params.card_id;
 
   try {
@@ -81,7 +88,8 @@ const dislikeCard = async (req, res) => {
       { new: true },
     );
     if (card === null) {
-      res.status(404).send({ message: 'Card ID not found' });
+      throw new AppError(404, 'Card ID not found');
+      // res.status(404).send({ message: 'Card ID not found' });
     } else {
       res.status(200).send({ message: 'Card is not liked' });
     }
@@ -89,7 +97,8 @@ const dislikeCard = async (req, res) => {
     if (error.name === 'CastError') {
       res.status(400).send({ message: 'Invalid input' });
     } else {
-      res.status(500).send({ message: 'Something is not working...' });
+      next(error);
+      // res.status(500).send({ message: 'Something is not working...' });
     }
   }
 };
