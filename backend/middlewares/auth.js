@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const { AppError } = require('../errors/AppError');
+require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -10,7 +12,8 @@ const auth = (req, res, next) => {
 
   if (!authorization || !authorization.startsWith(`Bearer `)) {
     console.log('here', authorization);
-    return res.status(401).send({ message: 'Authorization required!' });
+    throw new AppError(401, 'Authorization required!');
+    // return res.status(401).send({ message: 'Authorization required!' });
   } else {
     const token = authorization.replace(`Bearer `, '');
     let payload;
@@ -20,17 +23,20 @@ const auth = (req, res, next) => {
         token,
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-string',
       );
-    } catch (err) {
-      console.log(err);
-      return res.status(401).send({ message: 'Authorization required' });
-    }
 
+      if (!payload) {
+        throw new AppError(401, 'Authorization requireda!');
+      }
+    } catch (err) {
+      next(err);
+    }
     req.user = payload;
 
     next();
     return req.user;
   }
 };
+// <=====
 
 module.exports = {
   auth,

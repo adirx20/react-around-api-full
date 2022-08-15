@@ -24,7 +24,7 @@ const createCard = async (req, res, next) => {
   } catch (error) {
     console.log('this is error: ', error);
     res.send({ message: `this is the error that I send: ${error}` });
-    next(error);
+    return next(error);
 
     // if (error.name === 'ValidationError') {
     //   res.status(400).send({ message: 'Invalid input' });
@@ -61,6 +61,7 @@ const deleteCard = async (req, res, next) => {
 
 const likeCard = async (req, res, next) => {
   const cardId = req.params.card_id;
+  console.log('this is card id', cardId)
 
   try {
     const card = await Card.findOneAndUpdate(
