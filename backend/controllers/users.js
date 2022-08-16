@@ -16,23 +16,30 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   // ? How do I know who the current user is?
   User.findById(req.user._id)
-    .orFail(() => {
-      const error = new Error('No user found with that id');
-      error.statusCode = 404;
-      throw error;
-    })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.statusCode === 404) {
-        res.status(404).send({ message: 'No user found with that id' });
-      } else if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid ID' });
+    // .orFail(() => {
+    //   const error = new Error('No user found with that id');
+    //   error.statusCode = 404;
+    //   throw error;
+    // })
+    .then((user) => {
+      if (!user) {
+        throw new AppError(404, 'No user found with that ID');
       } else {
-        res.status(500).send({ message: 'Server Error' });
+        res.send({ data: user });
       }
+    })
+    .catch((err) => {
+      next(err);
+      // if (err.statusCode === 404) {
+      //   res.status(404).send({ message: 'No user found with that id' });
+      // } else if (err.name === 'CastError') {
+      //   res.status(400).send({ message: 'Invalid ID' });
+      // } else {
+      //   res.status(500).send({ message: 'Server Error' });
+      // }
     });
 };
 

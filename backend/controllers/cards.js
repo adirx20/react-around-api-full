@@ -8,7 +8,6 @@ const getCards = async (req, res, next) => {
     res.status(200).send(cards);
   } catch (error) {
     next(error);
-    // res.status(500).send({ message: 'Requested resource not found' });
   }
 };
 
@@ -25,15 +24,6 @@ const createCard = async (req, res, next) => {
     console.log('this is error: ', error);
     res.send({ message: `this is the error that I send: ${error}` });
     return next(error);
-
-    // if (error.name === 'ValidationError') {
-    //   res.status(400).send({ message: 'Invalid input' });
-    // } else {
-    //   console.log('server error', error);
-    //   res.status(500).send({ message: `server error: ${error}` });
-    // next(error);
-    // res.status(500).send({ message: 'Something is not working...' });
-    // }
   }
 };
 
@@ -45,17 +35,11 @@ const deleteCard = async (req, res, next) => {
 
     if (!card) {
       throw new AppError(404, 'Card ID not found');
-      // res.status(404).send({ message: 'Card not found' });
     } else {
       res.status(200).send({ message: `${cardId} - This card has been deleted successfully` });
     }
   } catch (error) {
-    if (error.name === 'CastError') {
-      res.status(400).send({ message: 'Invalid input' });
-    } else {
-      next(error);
-      // res.status(500).send({ message: 'Something is not working...' });
-    }
+    next(error);
   }
 };
 
@@ -72,17 +56,11 @@ const likeCard = async (req, res, next) => {
 
     if (card === null) {
       throw new AppError(404, 'Card ID not found');
-      // res.status(404).send({ message: 'Card ID not found' });
     } else {
       res.status(200).send({ message: 'Card is liked' });
     }
   } catch (error) {
-    if (error.name === 'CastError') {
-      res.status(400).send({ message: 'Invalid input' });
-    } else {
-      next(error);
-      // res.status(500).send({ message: 'Something is not working...' });
-    }
+    next(error);
   }
 };
 
@@ -97,17 +75,11 @@ const dislikeCard = async (req, res, next) => {
     );
     if (card === null) {
       throw new AppError(404, 'Card ID not found');
-      // res.status(404).send({ message: 'Card ID not found' });
     } else {
       res.status(200).send({ message: 'Card is not liked' });
     }
   } catch (error) {
-    if (error.name === 'CastError') {
-      res.status(400).send({ message: 'Invalid input' });
-    } else {
-      next(error);
-      // res.status(500).send({ message: 'Something is not working...' });
-    }
+    next(error);
   }
 };
 
