@@ -12,7 +12,6 @@ const getUsers = async (req, res, next) => {
     res.send(users);
   } catch (error) {
     next(error);
-    // res.status(500).send({ message: 'Something is not working...' });
   }
 };
 
@@ -49,7 +48,6 @@ const getUserById = async (req, res, next) => {
 
     if (!user) {
       throw new AppError(404, 'User ID not found');
-      // res.status(404).send({ message: 'User ID not found' });
     } else {
       res.send(user);
     }
@@ -83,9 +81,6 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
-// catch previous handler ^
-// res.status(401).send({ message: 'Something is not working...' })
-// next(err);
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -105,8 +100,6 @@ const login = (req, res, next) => {
       next(err);
     });
 };
-// catch previous handler ^
-// res.status(401).send({ message: err.message });
 
 const updateProfile = async (req, res, next) => {
   const { name, about } = req.body;

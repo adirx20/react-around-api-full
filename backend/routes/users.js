@@ -1,27 +1,78 @@
 const express = require('express');
-
 const router = express.Router();
-
-const { auth } = require('../middlewares/auth');
-
+const { celebrate, Joi } = require('celebrate');
+const { validateURL } = require('../middlewares/validateURL');
 const {
-    getUsers,
-    getUserById,
-    createUser,
-    updateProfile,
-    updateProfileAvatar,
-    login,
-    getCurrentUser,
+  getUsers,
+  getUserById,
+  createUser,
+  updateProfile,
+  updateProfileAvatar,
+  login,
+  getCurrentUser,
 } = require('../controllers/users');
 
-router.post('/signin', login);
-router.post('/signup', createUser);
 
 router.get('/', getUsers);
-router.post('/', createUser);
-router.get('/me', auth, getCurrentUser);
-router.patch('/me', auth, updateProfile);
-router.patch('/me/avatar', auth, updateProfileAvatar);
-router.get('/:user_id', getUserById);
+router.get('/me', getCurrentUser);
+
+router.get(
+  '/:userId',
+  celebrate({
+    params: Joi.object().keys({
+      userId: Joi.string().hex(),
+    }),
+  }),
+  getUserById
+);
+
+router.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().email(),
+      password: Joi.string().required().min(8),
+    }),
+  }),
+  login
+);
+
+router.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().email(),
+      password: Joi.string().required().min(8),
+    }),
+  }),
+  createUser
+);
+
+// router.post(
+//   '/',
+//   createUser
+// );
+
+router.patch(
+  '/me',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().required().min(2).max(30),
+      about: Joi.string().required().min(2).max(30),
+    }),
+  }),
+  updateProfile
+);
+
+router.patch(
+  '/me/avatar',
+  celebrate({
+    body: Joi.object().keys({
+      avatar: Joi.string().required().custom(validateURL),
+    }),
+  }),
+  updateProfileAvatar
+);
+
 
 module.exports = router;

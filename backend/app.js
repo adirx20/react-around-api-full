@@ -3,9 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
-// const { login, createUser } = require('./controllers/users');
-// const { auth } = require('./middlewares/auth');
 const { centralErrorHandler } = require('./middlewares/centralErrorHandler');
+const { AppError } = require('./errors/AppError');
 
 require('dotenv').config();
 
@@ -22,22 +21,20 @@ mongoose.connect('mongodb://localhost:27017/aroundb');
 
 app.use(cors());
 app.options('*', cors());
-
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-// app.post('/signin', login);
-// app.post('/signup', createUser);
-
-// app.use(auth);
+app.use(requestLogger);
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
 app.use('/', (req, res) => {
-    res.status(404).send({ message: 'Requested resource not found' });
+  throw new AppError(404, 'Requested resource was not found');
+    // res.status(404).send({ message: 'Requested resource not found' });
 });
+
+app.use(errorLogger);
 
 app.use((err, req, res, next) => {
     centralErrorHandler(err, res);
