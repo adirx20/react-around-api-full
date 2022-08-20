@@ -63,7 +63,13 @@ const getUserById = async (req, res, next) => {
 
 // NEW CREATE USER FUNCTION
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
 
   bcrypt
     .hash(password, 10)
@@ -77,9 +83,22 @@ const createUser = (req, res, next) => {
       });
     })
     .then((user) => {
-      res.status(201).send(user);
+      res
+        .status(201)
+        .send({
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        });
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      if (err.name === 'MongoServerError' || err.code === 11000) {
+        throw new AppError(409, 'Email already exist');
+      }
+      next(err);
+    });
 };
 
 const login = (req, res, next) => {
@@ -92,6 +111,10 @@ const login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-string',
         { expiresIn: '7d' },
       );
+
+      if (!user) {
+        throw new AppError(401, 'Wrong email / password');
+      }
 
       res.status(200).send({ user, token, message: 'successful' }); // need to edit the message
     })

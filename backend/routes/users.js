@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+
 const { celebrate, Joi } = require('celebrate');
 const { validateURL } = require('../middlewares/validateURL');
 const {
@@ -12,6 +12,7 @@ const {
   getCurrentUser,
 } = require('../controllers/users');
 
+const router = express.Router();
 
 router.get('/', getUsers);
 router.get('/me', getCurrentUser);
@@ -23,7 +24,7 @@ router.get(
       userId: Joi.string().hex(),
     }),
   }),
-  getUserById
+  getUserById,
 );
 
 router.post(
@@ -34,7 +35,7 @@ router.post(
       password: Joi.string().required().min(8),
     }),
   }),
-  login
+  login,
 );
 
 router.post(
@@ -45,13 +46,8 @@ router.post(
       password: Joi.string().required().min(8),
     }),
   }),
-  createUser
+  createUser,
 );
-
-// router.post(
-//   '/',
-//   createUser
-// );
 
 router.patch(
   '/me',
@@ -61,7 +57,7 @@ router.patch(
       about: Joi.string().required().min(2).max(30),
     }),
   }),
-  updateProfile
+  updateProfile,
 );
 
 router.patch(
@@ -71,8 +67,7 @@ router.patch(
       avatar: Joi.string().required().custom(validateURL),
     }),
   }),
-  updateProfileAvatar
+  updateProfileAvatar,
 );
-
 
 module.exports = router;

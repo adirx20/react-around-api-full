@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const { celebrate, Joi } = require('celebrate');
 const { validateURL } = require('../middlewares/validateURL');
 const {
@@ -9,6 +8,8 @@ const {
   likeCard,
   dislikeCard,
 } = require('../controllers/cards');
+
+const router = express.Router();
 
 router.get('/', getCards);
 
@@ -20,7 +21,7 @@ router.post(
       link: Joi.string().required().custom(validateURL),
     }),
   }),
-  createCard
+  createCard,
 );
 
 router.delete(
@@ -30,7 +31,7 @@ router.delete(
       cardId: Joi.string().hex(),
     }),
   }),
-  deleteCard
+  deleteCard,
 );
 
 router.put(
@@ -40,7 +41,7 @@ router.put(
       cardId: Joi.string().hex(),
     }),
   }),
-  likeCard
+  likeCard,
 );
 
 router.delete(
@@ -50,7 +51,7 @@ router.delete(
       cardId: Joi.string().hex(),
     }),
   }),
-  dislikeCard
+  dislikeCard,
 );
 
 module.exports = router;

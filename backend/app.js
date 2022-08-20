@@ -31,15 +31,14 @@ app.use('/cards', cardsRouter);
 
 app.use('/', (req, res) => {
   throw new AppError(404, 'Requested resource was not found');
-    // res.status(404).send({ message: 'Requested resource not found' });
 });
 
 app.use(errorLogger);
 
 app.use((err, req, res, next) => {
-    centralErrorHandler(err, res);
+  centralErrorHandler(err, res);
 });
 
 app.listen(PORT, () => {
-    console.log(`App listening at port ${PORT}`);
+  console.log(`App listening at port ${PORT}`);
 });

@@ -13,7 +13,6 @@ const getCards = async (req, res, next) => {
 
 const createCard = async (req, res, next) => {
   const { name, link } = req.body;
-  console.log('this is data of create card: ', name, link);
 
   try {
     const owner = req.user._id;
@@ -21,7 +20,6 @@ const createCard = async (req, res, next) => {
     const newCard = await Card.create({ name, link, owner });
     res.status(201).send(newCard);
   } catch (error) {
-    console.log('this is error: ', error);
     res.send({ message: `this is the error that I send: ${error}` });
     return next(error);
   }
@@ -45,7 +43,6 @@ const deleteCard = async (req, res, next) => {
 
 const likeCard = async (req, res, next) => {
   const cardId = req.params.card_id;
-  console.log('this is card id', cardId)
 
   try {
     const card = await Card.findOneAndUpdate(
